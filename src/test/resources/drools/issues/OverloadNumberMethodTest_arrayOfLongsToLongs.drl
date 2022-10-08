@@ -1,0 +1,9 @@
+package drools.issues;
+dialect "mvel"
+
+rule "Pepe likes numbers with 7"
+  when
+    $p:drools.issues.model.Person(firstName=="Pepe")
+  then
+    $p.setFavoriteNumbers(7l, 77l, 777l);
+end

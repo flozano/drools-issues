@@ -26,6 +26,17 @@ public class OverloadNumberMethodTest extends AbstractTest {
 		}
 	}
 
+	@ParameterizedTest
+	@EnumSource(RuntimeType.class)
+	public void arrayOfLongsToLongs(RuntimeType runtimeType) {
+		try (var executor = executor(runtimeType, "OverloadNumberMethodTest_arrayOfLongsToLongs.drl")) {
+			var fact = fact();
+			var result = executor.fire(fact);
+			assertEquals(1, result.getNumberOfFiredRules());
+			assertEquals(Set.of(7l, 77l, 777l), fact.getFavoriteNumbers());
+		}
+	}
+
 	private static Person fact() {
 		var fact = TestData.person();
 		fact.setFirstName("Pepe");
