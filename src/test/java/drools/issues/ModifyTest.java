@@ -12,6 +12,9 @@ import drools.issues.executor.RuntimeType;
 
 class ModifyTest extends AbstractTest {
 
+	/**
+	 * @see https://issues.redhat.com/browse/DROOLS-7195
+	 */
 	@ParameterizedTest
 	@EnumSource(RuntimeType.class)
 	void maxNumberOfRules_getterSyntax(RuntimeType runtimeType) {
@@ -24,6 +27,9 @@ class ModifyTest extends AbstractTest {
 		}
 	}
 
+	/**
+	 * @see https://issues.redhat.com/browse/DROOLS-7195
+	 */
 	@ParameterizedTest
 	@EnumSource(RuntimeType.class)
 	void maxNumberOfRules_mvelSyntax(RuntimeType runtimeType) {
@@ -36,6 +42,9 @@ class ModifyTest extends AbstractTest {
 		}
 	}
 
+	/**
+	 * @see https://issues.redhat.com/browse/DROOLS-5242
+	 */
 	@ParameterizedTest
 	@EnumSource(RuntimeType.class)
 	void maxNumberOfRules_mvelQualifiedSyntax(RuntimeType runtimeType) {
