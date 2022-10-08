@@ -1,0 +1,27 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	implementation 'org.drools:drools-engine:7.73.0.Final'
+	implementation 'org.drools:drools-decisiontables:7.73.0.Final'
+	implementation 'commons-io:commons-io:2.11.0'
+	implementation 'org.slf4j:slf4j-simple:2.0.3'
+	implementation 'com.google.guava:guava:30.1.1-jre'
+	
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.1'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
