@@ -2,6 +2,7 @@ package drools.issues.executor;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface RulesExecutor extends AutoCloseable {
 
@@ -26,6 +27,19 @@ public interface RulesExecutor extends AutoCloseable {
 		int FIRED_RULES_WARNING = 500;
 
 		List<?> getFacts();
+
+		default <T> List<T> getOutput(Class<T> ofType) {
+			return getOutput().stream().filter(ofType::isInstance).map(ofType::cast).collect(Collectors.toList());
+		}
+
+		default <T> T getSingleOutput(Class<T> ofType) {
+			var facts = getOutput(ofType);
+			return switch (facts.size()) {
+			case 0 -> null;
+			case 1 -> facts.get(0);
+			default -> throw new IllegalStateException();
+			};
+		}
 
 		RulesExecutor getSource();
 
@@ -85,7 +99,7 @@ class ErrorExecutionResult implements RulesExecutor.ExecutionResult {
 	public int getNumberOfFiredRules() {
 		return 0;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ErrorExecutionResult [source=" + source + ", cause=" + cause + "]";

@@ -1,0 +1,17 @@
+package drools.issues;
+global drools.issues.model.RegardsManager regardsManager;
+dialect "mvel"
+
+rule "Say hello to people over 40"
+	when
+		$p:drools.issues.model.Person(age>40)
+	then
+		insert(regardsManager.requestSendRegards("Hi "+$p.firstName))
+end
+
+rule "Don't send any salutation"
+	when
+		$t:drools.issues.model.SendRegards()
+	then
+		$t.setSend(false)
+end

@@ -8,13 +8,16 @@ import org.junit.jupiter.params.provider.EnumSource;
 import drools.issues.executor.RuntimeType;
 import drools.issues.model.Person;
 
-public class ExecutionTest extends AbstractTest {
+/**
+ * @see https://issues.redhat.com/browse/DROOLS-7195
+ */
+class ExecutionTest extends AbstractTest {
 
 	@ParameterizedTest
 	@EnumSource(RuntimeType.class)
 	public void firstLevelProperty(RuntimeType runtimeType) {
 		try (var executor = executor(runtimeType, "ExecutionTest_firstLevelProperty_mvel.drl")) {
-			var fact = fact();
+			var fact = emmanuel();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
 			assertEquals(45, fact.getAge());
@@ -25,7 +28,7 @@ public class ExecutionTest extends AbstractTest {
 	@EnumSource(RuntimeType.class)
 	public void nestedProperty(RuntimeType runtimeType) {
 		try (var executor = executor(runtimeType, "ExecutionTest_nestedProperty_mvel.drl")) {
-			var fact = fact();
+			var fact = emmanuel();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
 			assertEquals("FR", fact.getAddress().getCountry());
@@ -36,7 +39,7 @@ public class ExecutionTest extends AbstractTest {
 	@EnumSource(RuntimeType.class)
 	public void nestedPropertyMixed(RuntimeType runtimeType) {
 		try (var executor = executor(runtimeType, "ExecutionTest_nestedProperty_mixed.drl")) {
-			var fact = fact();
+			var fact = emmanuel();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
 			assertEquals("FR", fact.getAddress().getCountry());
@@ -44,11 +47,12 @@ public class ExecutionTest extends AbstractTest {
 		}
 	}
 
-	private static Person fact() {
+	private static Person emmanuel() {
 		var fact = TestData.person();
 		fact.setFirstName("Emmanuel");
 		fact.setLastName("Macron");
 		return fact;
 	}
+
 
 }

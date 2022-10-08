@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import drools.issues.executor.RuntimeType;
 import drools.issues.model.Person;
 
-public class OverloadNumberMethodTest extends AbstractTest {
+class OverloadNumberMethodTest extends AbstractTest {
 
 	/**
 	 * @see https://issues.redhat.com/browse/DROOLS-7196
