@@ -15,10 +15,22 @@ public class OverloadNumberMethodTest extends AbstractTest {
 	/**
 	 * @see https://issues.redhat.com/browse/DROOLS-7196
 	 */
+
 	@ParameterizedTest
 	@EnumSource(RuntimeType.class)
 	public void arrayOfIntToLongs(RuntimeType runtimeType) {
 		try (var executor = executor(runtimeType, "OverloadNumberMethodTest_arrayOfIntToLongs.drl")) {
+			var fact = fact();
+			var result = executor.fire(fact);
+			assertEquals(1, result.getNumberOfFiredRules());
+			assertEquals(Set.of(7l, 77l, 777l), fact.getFavoriteNumbers());
+		}
+	}
+
+	@ParameterizedTest
+	@EnumSource(RuntimeType.class)
+	public void arrayOfStringsToLongs(RuntimeType runtimeType) {
+		try (var executor = executor(runtimeType, "OverloadNumberMethodTest_arrayOfStringsToLongs.drl")) {
 			var fact = fact();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
