@@ -12,11 +12,32 @@ class ModifyTest extends AbstractTest {
 
 	@ParameterizedTest
 	@EnumSource(RuntimeType.class)
-	void maxNumberOfRules(RuntimeType runtimeType) {
-		var executor = executor(runtimeType, "ModifyTest_maxNumberOfRules.drl");
+	void maxNumberOfRules_getterSyntax(RuntimeType runtimeType) {
 		var fact = TestData.person();
-		var result = executor.fire(fact);
-		assertEquals(RulesExecutor.ExecutionResult.FIRED_RULES_MAX, result.getNumberOfFiredRules());
+
+		// OK with both mvel and executable model
+		try (var executor = executor(runtimeType, "ModifyTest_maxNumberOfRules_getter.drl")) {
+			var result = executor.fire(fact);
+			assertEquals(RulesExecutor.ExecutionResult.FIRED_RULES_MAX, result.getNumberOfFiredRules());
+		}
+	}
+
+	@ParameterizedTest
+	@EnumSource(RuntimeType.class)
+	void maxNumberOfRules_mvelSyntax(RuntimeType runtimeType) {
+		var fact = TestData.person();
+
+		// OK with both mvel and executable model
+		try (var executor = executor(runtimeType, "ModifyTest_maxNumberOfRules_getter.drl")) {
+			var result = executor.fire(fact);
+			assertEquals(RulesExecutor.ExecutionResult.FIRED_RULES_MAX, result.getNumberOfFiredRules());
+		}
+
+		// Fails with executable model
+		try (var executor = executor(runtimeType, "ModifyTest_maxNumberOfRules_mvel.drl")) {
+			var result = executor.fire(fact);
+			assertEquals(RulesExecutor.ExecutionResult.FIRED_RULES_MAX, result.getNumberOfFiredRules());
+		}
 	}
 
 }
