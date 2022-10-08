@@ -1,0 +1,9 @@
+package drools.issues;
+dialect "mvel"
+
+rule "Macron is 45yo"
+  when
+    $p:drools.issues.model.Person(firstName=="Emmanuel" && lastName=="Macron")
+  then
+    $p.age=45
+end

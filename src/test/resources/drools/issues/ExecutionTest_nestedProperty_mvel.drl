@@ -1,0 +1,9 @@
+package drools.issues;
+dialect "mvel"
+
+rule "Macron lives in France"
+  when
+    $p:drools.issues.model.Person(firstName=="Emmanuel" && lastName=="Macron")
+  then
+    $p.address.country="FR"
+end

@@ -1,0 +1,10 @@
+package drools.issues;
+dialect "mvel"
+
+rule "Macron lives in France"
+  when
+    $p:drools.issues.model.Person(firstName=="Emmanuel" && lastName=="Macron")
+  then
+    $p.getAddress().country="FR";
+    $p.address.setStreet("Champs Elysees");
+end
