@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.drools.core.impl.KnowledgeBaseFactory;
@@ -102,20 +101,4 @@ final class DroolsInternalFactory {
 	static KieServices instanceKieServices() {
 		return KieServices.Factory.get();
 	}
-}
-
-class InvalidRulesException extends RuntimeException {
-
-	private static final long serialVersionUID = 1L;
-
-	public InvalidRulesException(ReleaseId releaseId, Results results, StringBuilder drl) {
-		super(msg(releaseId, results, drl));
-	}
-
-	private static String msg(ReleaseId releaseId, Results results, StringBuilder drl) {
-		return "Invalid rules " + releaseId + ": "
-				+ results.getMessages().stream().map(Object::toString).collect(Collectors.joining("\n,", "\n", ""))
-				+ "\nDRL: " + drl.toString();
-	}
-
 }

@@ -1,0 +1,9 @@
+package drools.issues;
+dialect "mvel"
+
+rule "Modify fact without noloop will finish because of max number of executions"
+  when
+    $p:drools.issues.model.Person(address.visitors.value >= 0)
+  then
+    modify($p) { $p.address.visitors.setValue(1) }
+end
