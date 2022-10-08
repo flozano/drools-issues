@@ -12,6 +12,9 @@ import drools.issues.model.Person;
 
 public class OverloadNumberMethodTest extends AbstractTest {
 
+	/**
+	 * @see https://issues.redhat.com/browse/DROOLS-7196
+	 */
 	@ParameterizedTest
 	@EnumSource(RuntimeType.class)
 	public void arrayOfIntToLongs(RuntimeType runtimeType) {
