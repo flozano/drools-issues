@@ -19,7 +19,7 @@ class AbstractTest {
 	}
 
 	protected RulesExecutor executor(RuntimeType runtimeType, String drlName) {
-		return new SingleStatefulSessionExecutor(testInfo.getTestMethod().map(Object::toString).orElse(""),
+		return new SingleStatefulSessionExecutor(testInfo.getTestMethod().get().getName(),
 				AbstractTest.class.getClassLoader(), runtimeType, build(drlName));
 	}
 

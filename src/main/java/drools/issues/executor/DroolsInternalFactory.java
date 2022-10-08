@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.drools.core.impl.KnowledgeBaseFactory;
@@ -58,7 +59,7 @@ final class DroolsInternalFactory {
 		if (results.getMessages().size() > 0) {
 			LOGGER.error("KieBuilder has errors (releaseId={}): {}", releaseId, results);
 			LOGGER.warn("failing DRL: {}", drl.toString());
-			throw new RuntimeException("");
+			throw new InvalidRulesException(releaseId, results, drl);
 		}
 		LOGGER.debug("Creating container (releaseId={})", releaseId);
 		KieContainer result = kieServices.newKieContainer(releaseId, classLoader);
@@ -75,27 +76,25 @@ final class DroolsInternalFactory {
 	}
 
 	static void logTraceDRL(Resource resource, StringBuilder allDrl) {
-		if (LOGGER.isTraceEnabled()) {
-			if (ResourceType.DTABLE.equals(resource.getResourceType())) {
-				DecisionTableConfiguration configuration = KnowledgeBuilderFactory.newDecisionTableConfiguration();
-				configuration.setInputType(DecisionTableInputType.XLS);
+		if (ResourceType.DTABLE.equals(resource.getResourceType())) {
+			DecisionTableConfiguration configuration = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+			configuration.setInputType(DecisionTableInputType.XLS);
 
-				DecisionTableProviderImpl decisionTableProvider = new DecisionTableProviderImpl();
-				String drl = decisionTableProvider.loadFromResource(resource, configuration);
+			DecisionTableProviderImpl decisionTableProvider = new DecisionTableProviderImpl();
+			String drl = decisionTableProvider.loadFromResource(resource, configuration);
 
-				LOGGER.trace("Generated DRL for DecisionTable resource {} is: {}", resource.getSourcePath(), drl);
+			LOGGER.trace("Generated DRL for DecisionTable resource {} is: {}", resource.getSourcePath(), drl);
 
-				allDrl.append("\n// DRL from decision table ").append(resource.getSourcePath()).append("\n");
-				allDrl.append(drl);
+			allDrl.append("\n// DRL from decision table ").append(resource.getSourcePath()).append("\n");
+			allDrl.append(drl);
+			allDrl.append("\n//\n");
+		} else if (ResourceType.DRL.equals(resource.getResourceType())) {
+			try (InputStream is = resource.getInputStream()) {
+				allDrl.append("\n// DRL directly from ").append(resource.getSourcePath()).append("\n");
+				allDrl.append(IOUtils.toString(is, StandardCharsets.UTF_8));
 				allDrl.append("\n//\n");
-			} else if (ResourceType.DRL.equals(resource.getResourceType())) {
-				try (InputStream is = resource.getInputStream()) {
-					allDrl.append("\n// DRL directly from ").append(resource.getSourcePath()).append("\n");
-					allDrl.append(IOUtils.toString(is, StandardCharsets.UTF_8));
-					allDrl.append("\n//\n");
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -103,4 +102,20 @@ final class DroolsInternalFactory {
 	static KieServices instanceKieServices() {
 		return KieServices.Factory.get();
 	}
+}
+
+class InvalidRulesException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	public InvalidRulesException(ReleaseId releaseId, Results results, StringBuilder drl) {
+		super(msg(releaseId, results, drl));
+	}
+
+	private static String msg(ReleaseId releaseId, Results results, StringBuilder drl) {
+		return "Invalid rules " + releaseId + ": "
+				+ results.getMessages().stream().map(Object::toString).collect(Collectors.joining("\n,", "\n", ""))
+				+ "\nDRL: " + drl.toString();
+	}
+
 }
