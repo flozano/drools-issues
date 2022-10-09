@@ -1,0 +1,18 @@
+package drools.issues;
+
+dialect "mvel"
+
+rule "Diesel cars with ad-blue have score of 5"
+	when
+		$v:drools.issues.model.vehicles.DieselCar(motor.adBlueRequired==true)
+	then
+		$v.score=5;		
+end
+
+rule "Diesel cars without ad-blue have score of 3"
+	when
+		$v:drools.issues.model.vehicles.DieselCar(motor.adBlueRequired==false)
+	then
+		$v.score=3;
+end
+

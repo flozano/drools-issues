@@ -1,0 +1,17 @@
+package drools.issues;
+
+dialect "mvel"
+
+rule "Electric cars with big battery have score of 10"
+	when
+		$v:drools.issues.model.vehicles.ElectricCar(engine.batterySize>70)
+	then
+		$v.score=10;
+end
+
+rule "Electric cars with small battery have score of 7"
+	when
+		$v:drools.issues.model.vehicles.ElectricCar(engine.batterySize<=70)
+	then
+		$v.score=7;
+end
