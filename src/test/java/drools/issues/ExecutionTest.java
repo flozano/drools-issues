@@ -47,6 +47,18 @@ class ExecutionTest extends AbstractTest {
 		}
 	}
 
+	@ParameterizedTest
+	@EnumSource(RuntimeType.class)
+	public void useGetter(RuntimeType runtimeType) {
+		try (var executor = executor(runtimeType, "ExecutionTest_nestedProperty_getter.drl")) {
+			var fact = emmanuel();
+			var result = executor.fire(fact);
+			assertEquals(1, result.getNumberOfFiredRules());
+			assertEquals("FR", fact.getAddress().getCountry());
+			assertEquals("Champs Elysees", fact.getAddress().getStreet());
+		}
+	}
+
 	private static Person emmanuel() {
 		var fact = TestData.person();
 		fact.setFirstName("Emmanuel");
