@@ -11,6 +11,9 @@ import drools.issues.model.RegardsManager;
 import drools.issues.model.SendRegards;
 import drools.issues.model.vehicles.ElectricCar;
 
+/**
+ * @see https://issues.redhat.com/browse/DROOLS-7198
+ */
 class CastTest extends AbstractTest {
 
 	@ParameterizedTest
