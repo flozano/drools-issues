@@ -1,0 +1,10 @@
+package drools.issues;
+global drools.issues.model.RegardsManager regardsManager;
+dialect "mvel"
+
+rule "Send regards to all Tesla owners"
+	when
+		$v:drools.issues.model.vehicles.ElectricCar(maker=='Tesla')
+	then
+		insert(regardsManager.requestSendRegards("Hi, owner of a Tesla!").withParam("score", (String) $v.score ));
+end
