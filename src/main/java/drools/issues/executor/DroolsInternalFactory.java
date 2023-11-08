@@ -6,9 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.drools.core.impl.KnowledgeBaseFactory;
 import org.drools.decisiontable.DecisionTableProviderImpl;
-import org.drools.modelcompiler.ExecutableModelProject;
+import org.drools.model.codegen.ExecutableModelProject;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
@@ -66,8 +65,8 @@ final class DroolsInternalFactory {
 		return result;
 	}
 
-	static KieBase instanceKieBase(List<KieBaseOption> kieBaseOptions, KieContainer kieContainer) {
-		KieBaseConfiguration config = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
+	static KieBase instanceKieBase(List<KieBaseOption> kieBaseOptions, KieContainer kieContainer, KieServices kieServices) {
+		KieBaseConfiguration config = kieServices.newKieBaseConfiguration();
 		kieBaseOptions.forEach(config::setOption);
 		config.setProperty(ConsequenceExceptionHandlerOption.PROPERTY_NAME,
 				RulesConsequenceExceptionHandler.class.getName());

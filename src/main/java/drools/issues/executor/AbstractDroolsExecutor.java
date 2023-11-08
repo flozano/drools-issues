@@ -7,9 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import org.drools.compiler.kproject.ReleaseIdImpl;
-import org.drools.core.SessionConfiguration;
-import org.drools.core.command.runtime.rule.FireAllRulesCommand;
+import org.drools.commands.runtime.rule.FireAllRulesCommand;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.builder.ReleaseId;
@@ -21,6 +19,8 @@ import org.kie.api.io.Resource;
 import org.kie.api.runtime.CommandExecutor;
 import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSessionConfiguration;
+import org.kie.util.maven.support.ReleaseIdImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +29,6 @@ abstract class AbstractDroolsExecutor implements AutoCloseable, RulesExecutor {
 	private static final String FIRED = "fired";
 	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractDroolsExecutor.class);
 	private static final String RESULT = "result";
-	protected static final SessionConfiguration SESSION_CONFIGURATION = SessionConfiguration.newInstance();
-	static {
-		SESSION_CONFIGURATION.setThreadSafe(false);
-	}
 
 	private final KieContainer kieContainer;
 	private final KieBase kieBase;
@@ -40,6 +36,8 @@ abstract class AbstractDroolsExecutor implements AutoCloseable, RulesExecutor {
 	private final String ruleSetReference;
 	private final KieServices kieServices;
 	private final KieCommands commands;
+
+	private final KieSessionConfiguration sessionConfiguration;
 
 	AbstractDroolsExecutor(String ruleSetReference, ClassLoader classLoader, RuntimeType runtimeType,
 			Resource[] resources) {
@@ -51,11 +49,12 @@ abstract class AbstractDroolsExecutor implements AutoCloseable, RulesExecutor {
 		this.ruleSetReference = Objects.requireNonNull(ruleSetReference);
 		this.releaseId = new ReleaseIdImpl("drools.issues.rules", ruleSetReference, "1.0.0");
 		this.kieServices = DroolsInternalFactory.instanceKieServices();
+		this.sessionConfiguration = kieServices.newKieSessionConfiguration();
 		this.commands = kieServices.getCommands();
 		LOGGER.info("Creating new container (ruleSet={}, type={})", ruleSetReference, getClass().getSimpleName());
 		kieContainer = DroolsInternalFactory.instanceKieContainer(kieServices, releaseId, classLoader, resources,
 				runtimeType);
-		kieBase = DroolsInternalFactory.instanceKieBase(kieBaseOptions, kieContainer);
+		kieBase = DroolsInternalFactory.instanceKieBase(kieBaseOptions, kieContainer, kieServices);
 		LOGGER.info("New container created (ruleSet={}, type={})", ruleSetReference, getClass().getSimpleName());
 	}
 
@@ -76,6 +75,10 @@ abstract class AbstractDroolsExecutor implements AutoCloseable, RulesExecutor {
 
 	protected KieContainer getContainer() {
 		return kieContainer;
+	}
+
+	protected KieSessionConfiguration getSessionConfiguration() {
+		return sessionConfiguration;
 	}
 
 	protected KieBase getBase() {
