@@ -1,8 +1,8 @@
 package drools.issues.executor;
 
 import org.drools.core.WorkingMemory;
-import org.drools.core.spi.Activation;
-import org.drools.core.spi.ConsequenceExceptionHandler;
+import org.drools.core.rule.consequence.ConsequenceExceptionHandler;
+import org.drools.core.rule.consequence.InternalMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +14,9 @@ public class RulesConsequenceExceptionHandler implements ConsequenceExceptionHan
 	}
 
 	@Override
-	public void handleException(Activation activation, WorkingMemory workingMemory, Exception exception) {
+	public void handleException(InternalMatch internalMatch, WorkingMemory workingMemory, Exception exception) {
 		String releaseId = workingMemory.getKnowledgeBase().getResolvedReleaseId().toString();
-		LOGGER.error("Handling exception for rule '{}' (releaseId={})", activation.getRule().getName(), releaseId,
+		LOGGER.error("Handling exception for rule '{}' (releaseId={})", internalMatch.getRule().getName(), releaseId,
 				exception);
 	}
-
 }
