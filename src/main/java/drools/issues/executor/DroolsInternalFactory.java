@@ -6,9 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.drools.core.impl.KnowledgeBaseFactory;
 import org.drools.decisiontable.DecisionTableProviderImpl;
-import org.drools.modelcompiler.ExecutableModelProject;
+import org.drools.model.codegen.ExecutableModelProject;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
@@ -56,8 +55,7 @@ final class DroolsInternalFactory {
 		LOGGER.debug("Built (releaseId={})", releaseId);
 		Results results = kieBuilder.getResults();
 		if (results.getMessages().size() > 0) {
-			LOGGER.error("KieBuilder has errors (releaseId={}): {}", releaseId, results);
-			LOGGER.warn("failing DRL: {}", drl.toString());
+			LOGGER.warn("KieBuilder has errors (releaseId={}): {}", releaseId, results);
 			throw new InvalidRulesException(releaseId, results, drl);
 		}
 		LOGGER.debug("Creating container (releaseId={})", releaseId);
@@ -66,8 +64,9 @@ final class DroolsInternalFactory {
 		return result;
 	}
 
-	static KieBase instanceKieBase(List<KieBaseOption> kieBaseOptions, KieContainer kieContainer) {
-		KieBaseConfiguration config = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
+	static KieBase instanceKieBase(List<KieBaseOption> kieBaseOptions, KieServices kieServices,
+			KieContainer kieContainer) {
+		KieBaseConfiguration config = kieServices.newKieBaseConfiguration();
 		kieBaseOptions.forEach(config::setOption);
 		config.setProperty(ConsequenceExceptionHandlerOption.PROPERTY_NAME,
 				RulesConsequenceExceptionHandler.class.getName());
@@ -75,25 +74,27 @@ final class DroolsInternalFactory {
 	}
 
 	static void logTraceDRL(Resource resource, StringBuilder allDrl) {
-		if (ResourceType.DTABLE.equals(resource.getResourceType())) {
-			DecisionTableConfiguration configuration = KnowledgeBuilderFactory.newDecisionTableConfiguration();
-			configuration.setInputType(DecisionTableInputType.XLS);
+		if (LOGGER.isTraceEnabled()) {
+			if (ResourceType.DTABLE.equals(resource.getResourceType())) {
+				DecisionTableConfiguration configuration = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+				configuration.setInputType(DecisionTableInputType.XLS);
 
-			DecisionTableProviderImpl decisionTableProvider = new DecisionTableProviderImpl();
-			String drl = decisionTableProvider.loadFromResource(resource, configuration);
+				DecisionTableProviderImpl decisionTableProvider = new DecisionTableProviderImpl();
+				String drl = decisionTableProvider.loadFromResource(resource, configuration);
 
-			LOGGER.trace("Generated DRL for DecisionTable resource {} is: {}", resource.getSourcePath(), drl);
+				LOGGER.trace("Generated DRL for DecisionTable resource {} is: {}", resource.getSourcePath(), drl);
 
-			allDrl.append("\n// DRL from decision table ").append(resource.getSourcePath()).append("\n");
-			allDrl.append(drl);
-			allDrl.append("\n//\n");
-		} else if (ResourceType.DRL.equals(resource.getResourceType())) {
-			try (InputStream is = resource.getInputStream()) {
-				allDrl.append("\n// DRL directly from ").append(resource.getSourcePath()).append("\n");
-				allDrl.append(IOUtils.toString(is, StandardCharsets.UTF_8));
+				allDrl.append("\n// DRL from decision table ").append(resource.getSourcePath()).append("\n");
+				allDrl.append(drl);
 				allDrl.append("\n//\n");
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			} else if (ResourceType.DRL.equals(resource.getResourceType())) {
+				try (InputStream is = resource.getInputStream()) {
+					allDrl.append("\n// DRL directly from ").append(resource.getSourcePath()).append("\n");
+					allDrl.append(IOUtils.toString(is, StandardCharsets.UTF_8));
+					allDrl.append("\n//\n");
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 	}

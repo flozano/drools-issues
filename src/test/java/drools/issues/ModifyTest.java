@@ -16,12 +16,12 @@ class ModifyTest extends AbstractTest {
 	 * @see https://issues.redhat.com/browse/DROOLS-7195
 	 */
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	void maxNumberOfRules_getterSyntax(RuntimeType runtimeType) {
+	@EnumSource(TestScenario.class)
+	void maxNumberOfRules_getterSyntax(TestScenario scenario) {
 		var fact = TestData.person();
 
 		// OK with both mvel and executable model
-		try (var executor = executor(runtimeType, "ModifyTest_maxNumberOfRules_getter.drl")) {
+		try (var executor = executor(scenario, "ModifyTest_maxNumberOfRules_getter.drl")) {
 			var result = executor.fire(fact);
 			assertEquals(RulesExecutor.ExecutionResult.FIRED_RULES_MAX, result.getNumberOfFiredRules());
 		}
@@ -31,12 +31,12 @@ class ModifyTest extends AbstractTest {
 	 * @see https://issues.redhat.com/browse/DROOLS-7195
 	 */
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	void maxNumberOfRules_mvelSyntax(RuntimeType runtimeType) {
+	@EnumSource(TestScenario.class)
+	void maxNumberOfRules_mvelSyntax(TestScenario scenario) {
 		var fact = TestData.person();
 
 		// Fails with executable model
-		try (var executor = executor(runtimeType, "ModifyTest_maxNumberOfRules_mvel.drl")) {
+		try (var executor = executor(scenario, "ModifyTest_maxNumberOfRules_mvel.drl")) {
 			var result = executor.fire(fact);
 			assertEquals(RulesExecutor.ExecutionResult.FIRED_RULES_MAX, result.getNumberOfFiredRules());
 		}
@@ -46,10 +46,10 @@ class ModifyTest extends AbstractTest {
 	 * @see https://issues.redhat.com/browse/DROOLS-5242
 	 */
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	void maxNumberOfRules_mvelQualifiedSyntax(RuntimeType runtimeType) {
+	@EnumSource(TestScenario.class)
+	void maxNumberOfRules_mvelQualifiedSyntax(TestScenario scenario) {
 		// Fails with executable model
-		try (var executor = executor(runtimeType, "ModifyTest_maxNumberOfRules_mvel_qualified.drl")) {
+		try (var executor = executor(scenario, "ModifyTest_maxNumberOfRules_mvel_qualified.drl")) {
 			fail("Should have failed");
 		} catch (InvalidRulesException e) {
 			// OK

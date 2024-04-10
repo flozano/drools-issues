@@ -1,0 +1,10 @@
+package drools.issues.model;
+
+dialect "mvel"
+
+rule "Insert an useless object"
+    when
+        $p:drools.issues.model.Person(age>40)
+    then
+        insert(new drools.issues.model.SendRegards("Hi "+$p.firstName+"!"));
+end

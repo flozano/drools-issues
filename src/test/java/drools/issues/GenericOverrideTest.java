@@ -15,9 +15,9 @@ import drools.issues.model.vehicles.ElectricCar;
 class GenericOverrideTest extends AbstractTest {
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void ensureOverrideWorks(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "GenericOverrideTest_ensureOverrideWorks.drl")) {
+	@EnumSource(TestScenario.class)
+	public void ensureOverrideWorks(TestScenario scenario) {
+		try (var executor = executor(scenario, "GenericOverrideTest_ensureOverrideWorks.drl")) {
 			var golfTdi = new DieselCar("VW", "Golf 1.6 TDI", 85, true);
 			var result = executor.fire(golfTdi);
 			assertEquals(1, result.getNumberOfFiredRules());
@@ -26,9 +26,9 @@ class GenericOverrideTest extends AbstractTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void ensureOverrideWorksOK(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "GenericOverrideTest_ensureOverrideWorksOK.drl")) {
+	@EnumSource(TestScenario.class)
+	public void ensureOverrideWorksOK(TestScenario scenario) {
+		try (var executor = executor(scenario, "GenericOverrideTest_ensureOverrideWorksOK.drl")) {
 			var teslaModel3 = new ElectricCar("Tesla", "Model 3", 200, 90);
 			var result = executor.fire(teslaModel3);
 			assertEquals(1, result.getNumberOfFiredRules());

@@ -3,53 +3,45 @@ package drools.issues;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import drools.issues.executor.RuntimeType;
 import drools.issues.model.Person;
 import drools.issues.model.RegardsManager;
 import drools.issues.model.SendRegards;
 
-/**
- * @see https://issues.redhat.com/browse/DROOLS-7195
- */
-class ExecutionTest2 extends AbstractTest {
+class UselessOutput extends AbstractTest {
 
 
 	@ParameterizedTest
 	@EnumSource(TestScenario.class)
-	public void helloWithMVELSyntax(TestScenario scenario) {
-		try (var executor = executor(scenario, "ExecutionTest2_hello.drl")) {
-			executor.addGlobalVariable("regardsManager", new RegardsManager());
+	public void testUsefulFactIsRetrieved(TestScenario scenario) {
+		try (var executor = executor(scenario, "UselessOutput_testUseful.drl")) {
 			var fact = donald();
 			var result = executor.fire(fact);
 			assertEquals(2, result.getNumberOfFiredRules());
 			assertEquals(2, result.getOutput().size());
 			var sendRegards = result.getSingleOutput(SendRegards.class);
 			assertNotNull(sendRegards);
-			assertEquals("Hi Donald", sendRegards.getMessage());
-			assertFalse(sendRegards.isSend());
+			assertEquals("Hi Donald!", sendRegards.getMessage());
 		}
 	}
 
 	@ParameterizedTest
 	@EnumSource(TestScenario.class)
-	public void helloWithSetter(TestScenario scenario) {
-		try (var executor = executor(scenario, "ExecutionTest2_hello_setter.drl")) {
-			executor.addGlobalVariable("regardsManager", new RegardsManager());
+	public void testUselessFactIsRetrieved(TestScenario scenario) {
+		try (var executor = executor(scenario, "UselessOutput_testUseless.drl")) {
 			var fact = donald();
 			var result = executor.fire(fact);
-			assertEquals(2, result.getNumberOfFiredRules());
+			assertEquals(1, result.getNumberOfFiredRules());
 			assertEquals(2, result.getOutput().size());
 			var sendRegards = result.getSingleOutput(SendRegards.class);
 			assertNotNull(sendRegards);
-			assertEquals("Hi Donald", sendRegards.getMessage());
-			assertFalse(sendRegards.isSend());
+			assertEquals("Hi Donald!", sendRegards.getMessage());
 		}
 	}
-
 
 	private static Person donald() {
 		var fact = TestData.person();

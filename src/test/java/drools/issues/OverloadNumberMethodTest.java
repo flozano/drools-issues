@@ -17,9 +17,9 @@ class OverloadNumberMethodTest extends AbstractTest {
 	 */
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void arrayOfIntToLongs(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "OverloadNumberMethodTest_arrayOfIntToLongs.drl")) {
+	@EnumSource(TestScenario.class)
+	public void arrayOfIntToLongs(TestScenario scenario) {
+		try (var executor = executor(scenario, "OverloadNumberMethodTest_arrayOfIntToLongs.drl")) {
 			var fact = fact();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
@@ -28,9 +28,9 @@ class OverloadNumberMethodTest extends AbstractTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void arrayOfStringsToLongs(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "OverloadNumberMethodTest_arrayOfStringsToLongs.drl")) {
+	@EnumSource(TestScenario.class)
+	public void arrayOfStringsToLongs(TestScenario scenario) {
+		try (var executor = executor(scenario, "OverloadNumberMethodTest_arrayOfStringsToLongs.drl")) {
 			var fact = fact();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
@@ -39,9 +39,9 @@ class OverloadNumberMethodTest extends AbstractTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void arrayOfLongsToLongs(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "OverloadNumberMethodTest_arrayOfLongsToLongs.drl")) {
+	@EnumSource(TestScenario.class)
+	public void arrayOfLongsToLongs(TestScenario scenario) {
+		try (var executor = executor(scenario, "OverloadNumberMethodTest_arrayOfLongsToLongs.drl")) {
 			var fact = fact();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());

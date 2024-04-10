@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import drools.issues.executor.RuntimeType;
 import drools.issues.model.Person;
 
 /**
@@ -14,9 +13,9 @@ import drools.issues.model.Person;
 class ExecutionTest extends AbstractTest {
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void firstLevelProperty(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "ExecutionTest_firstLevelProperty_mvel.drl")) {
+	@EnumSource(TestScenario.class)
+	public void firstLevelProperty(TestScenario scenario) {
+		try (var executor = executor(scenario, "ExecutionTest_firstLevelProperty_mvel.drl")) {
 			var fact = emmanuel();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
@@ -25,9 +24,9 @@ class ExecutionTest extends AbstractTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void nestedProperty(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "ExecutionTest_nestedProperty_mvel.drl")) {
+	@EnumSource(TestScenario.class)
+	public void nestedProperty(TestScenario scenario) {
+		try (var executor = executor(scenario, "ExecutionTest_nestedProperty_mvel.drl")) {
 			var fact = emmanuel();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
@@ -36,9 +35,9 @@ class ExecutionTest extends AbstractTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void nestedPropertyMixed(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "ExecutionTest_nestedProperty_mixed.drl")) {
+	@EnumSource(TestScenario.class)
+	public void nestedPropertyMixed(TestScenario scenario) {
+		try (var executor = executor(scenario, "ExecutionTest_nestedProperty_mixed.drl")) {
 			var fact = emmanuel();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
@@ -48,9 +47,9 @@ class ExecutionTest extends AbstractTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void useGetter(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "ExecutionTest_nestedProperty_getter.drl")) {
+	@EnumSource(TestScenario.class)
+	public void useGetter(TestScenario scenario) {
+		try (var executor = executor(scenario, "ExecutionTest_nestedProperty_getter.drl")) {
 			var fact = emmanuel();
 			var result = executor.fire(fact);
 			assertEquals(1, result.getNumberOfFiredRules());
@@ -65,6 +64,5 @@ class ExecutionTest extends AbstractTest {
 		fact.setLastName("Macron");
 		return fact;
 	}
-
 
 }

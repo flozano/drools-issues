@@ -20,7 +20,7 @@ public class SingleStatefulSessionExecutor extends AbstractDroolsExecutor implem
 	public ExecutionResult fire(Object... facts) {
 		KieSession session = null;
 		try {
-			session = pool.newKieSession(SESSION_CONFIGURATION);
+			session = pool.newKieSession(getSessionConfiguration());
 			session.getGlobals().setDelegate(sessionGlobals);
 			var batchResult = executeBatch(session, facts);
 			return new ExecutionResultImpl(facts, batchResult.results, batchResult.firedRules);

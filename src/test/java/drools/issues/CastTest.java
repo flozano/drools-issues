@@ -17,9 +17,9 @@ import drools.issues.model.vehicles.ElectricCar;
 class CastTest extends AbstractTest {
 
 	@ParameterizedTest
-	@EnumSource(RuntimeType.class)
-	public void intToString(RuntimeType runtimeType) {
-		try (var executor = executor(runtimeType, "CastTest_intToString.drl")) {
+	@EnumSource(TestScenario.class)
+	public void intToString(TestScenario scenario) {
+		try (var executor = executor(scenario, "CastTest_intToString.drl")) {
 			executor.addGlobalVariable("regardsManager", new RegardsManager());
 			var teslaModel3 = new ElectricCar("Tesla", "Model 3", 200, 90);
 			teslaModel3.setScore(10);
