@@ -16,7 +16,7 @@ public class DieselEngine extends Engine {
 	}
 
 	@Override
-	boolean isZeroEmissions() {
+	public boolean isZeroEmissions() {
 		return false;
 	}
 

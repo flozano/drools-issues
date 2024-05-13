@@ -9,7 +9,7 @@ public class ElectricEngine extends Engine {
 	}
 
 	@Override
-	boolean isZeroEmissions() {
+	public boolean isZeroEmissions() {
 		return true;
 	}
 

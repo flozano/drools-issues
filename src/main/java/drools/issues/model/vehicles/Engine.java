@@ -12,6 +12,6 @@ public abstract class Engine {
 		return kw;
 	}
 
-	abstract boolean isZeroEmissions();
+	public abstract boolean isZeroEmissions();
 
 }

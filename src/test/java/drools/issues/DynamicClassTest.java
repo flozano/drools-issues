@@ -15,7 +15,10 @@ import drools.issues.model.vehicles.Vehicle;
 import drools.issues.model.vehicles.VehicleError;
 
 public class DynamicClassTest extends AbstractTest {
-	
+	static {
+		System.setProperty("drools.dialect.java.compiler", "NATIVE");
+		System.setProperty("drools.dialect.java.compiler.lnglevel", "17");
+	}
 	@ParameterizedTest
 	@EnumSource(TestScenario.class)
 	public void test(TestScenario scenario)
