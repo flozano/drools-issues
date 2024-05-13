@@ -42,7 +42,7 @@ abstract class AbstractDroolsExecutor implements AutoCloseable, RulesExecutor {
 
 	AbstractDroolsExecutor(String ruleSetReference, ClassLoader classLoader, RuntimeType runtimeType,
 			Resource[] resources) {
-		this(ruleSetReference, classLoader, runtimeType, List.of(KieBaseMutabilityOption.DISABLED), resources);
+		this(ruleSetReference, classLoader, runtimeType, List.of(KieBaseMutabilityOption.ALLOWED), resources);
 	}
 
 	AbstractDroolsExecutor(String ruleSetReference, ClassLoader classLoader, RuntimeType runtimeType,
@@ -55,7 +55,7 @@ abstract class AbstractDroolsExecutor implements AutoCloseable, RulesExecutor {
 		LOGGER.info("Creating new container (ruleSet={}, type={})", ruleSetReference, getClass().getSimpleName());
 		kieContainer = DroolsInternalFactory.instanceKieContainer(kieServices, releaseId, classLoader, resources,
 				runtimeType);
-		kieBase = DroolsInternalFactory.instanceKieBase(kieBaseOptions, kieServices, kieContainer);
+		kieBase = DroolsInternalFactory.instanceKieBase(kieBaseOptions, kieServices, kieContainer, classLoader);
 		LOGGER.info("New container created (ruleSet={}, type={})", ruleSetReference, getClass().getSimpleName());
 	}
 

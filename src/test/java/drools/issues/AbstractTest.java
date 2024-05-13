@@ -5,13 +5,15 @@ import org.kie.api.io.Resource;
 import org.kie.api.io.ResourceType;
 
 import drools.issues.executor.RulesExecutor;
-import drools.issues.executor.RuntimeType;
-import drools.issues.executor.SingleStatefulSessionExecutor;
 
 class AbstractTest {
 
 	protected RulesExecutor executor(TestScenario scenario, String drlName) {
-		return scenario.factory.create(drlName, AbstractTest.class.getClassLoader(), scenario.runtimeType, build(drlName));
+		return executor(scenario, drlName, AbstractTest.class.getClassLoader());
+	}
+
+	protected RulesExecutor executor(TestScenario scenario, String drlName, ClassLoader classLoader) {
+		return scenario.factory.create(drlName, classLoader, scenario.runtimeType, build(drlName));
 	}
 
 	public Resource[] build(String drlName) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.drools.decisiontable.DecisionTableProviderImpl;
@@ -65,8 +66,8 @@ final class DroolsInternalFactory {
 	}
 
 	static KieBase instanceKieBase(List<KieBaseOption> kieBaseOptions, KieServices kieServices,
-			KieContainer kieContainer) {
-		KieBaseConfiguration config = kieServices.newKieBaseConfiguration();
+			KieContainer kieContainer, ClassLoader classLoader) {
+		KieBaseConfiguration config = kieServices.newKieBaseConfiguration(new Properties(), classLoader);
 		kieBaseOptions.forEach(config::setOption);
 		config.setProperty(ConsequenceExceptionHandlerOption.PROPERTY_NAME,
 				RulesConsequenceExceptionHandler.class.getName());
