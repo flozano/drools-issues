@@ -4,6 +4,13 @@ public class DieselEngine extends Engine {
 
 	private boolean dirty;
 
+	// diesel has no octanes... but let's pretend it does
+	private boolean highOctane;
+
+	private int maxTorque;
+
+	private long serialNumber;
+
 	private final boolean adBlueRequired;
 
 	public DieselEngine(int kw, boolean adBlueRequired) {
@@ -26,6 +33,30 @@ public class DieselEngine extends Engine {
 
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
+	}
+
+	public boolean isHighOctane() {
+		return highOctane;
+	}
+
+	public void setHighOctane(boolean highOctane) {
+		this.highOctane = highOctane;
+	}
+
+	public int getMaxTorque() {
+		return maxTorque;
+	}
+
+	public void setMaxTorque(int maxTorque) {
+		this.maxTorque = maxTorque;
+	}
+
+	public void setSerialNumber(long serialNumber) {
+		this.serialNumber = serialNumber;
+	}
+
+	public long getSerialNumber() {
+		return serialNumber;
 	}
 
 }

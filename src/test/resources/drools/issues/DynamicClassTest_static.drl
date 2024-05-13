@@ -1,0 +1,40 @@
+package drools.issues;
+import drools.issues.model.vehicles.*;
+
+dialect "mvel"
+
+rule "Diesel vehicles with more than 95 kW use high-octane fuel (diesel has no octane, this is a test)"
+    when
+        $v:drools.issues.model.vehicles.DieselCar($v.motor.kw > 95, $v.score<=0, $v.motor.highOctane == false)
+    then
+        System.out.println("Diesel vehicle with more than 95 kW: " + $v+", score="+$v.score);
+        $v.engine.highOctane = true;
+        update($v);
+end
+
+
+
+rule "High octane engine vehicles have additional score"
+    when
+        $v:drools.issues.model.vehicles.DieselCar($v.motor.highOctane == true, $v.score<=0)
+    then
+        System.out.println("High octane engine vehicle: " + $v);
+        $v.score = $v.score + 1;
+        update($v);
+end
+
+rule "High-octane fuel engines newer serial numbers have slightly higher score"
+    when
+        $v:drools.issues.model.vehicles.DieselCar($v.motor.highOctane == true, $v.score<=1, $v.motor.serialNumber > 50000)
+    then
+        System.out.println("High octane engine vehicle with newer serial number: " + $v);
+        $v.score = $v.score + 1;
+        update($v);
+end
+
+rule "Max torque of engine cannot be higher than frame torque"
+    when
+        $v:drools.issues.model.vehicles.DieselCar($v.motor.maxTorque > $v.frameMaxTorque)
+    then
+        insert(new VehicleError($v, "Engine torque higher than frame torque"));
+end

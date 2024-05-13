@@ -51,7 +51,8 @@ public class GasolineModelGenerator {
 								.withArgument(0, 1) //
 								.andThen(FieldAccessor.ofField("engine").setsArgumentAt(2)) //
 						) //
-						.defineMethod("getEngine", engineClass, Visibility.PUBLIC) //
+						// .defineMethod("getEngine", engineClass, Visibility.PUBLIC) //
+						.method(ElementMatchers.named("getEngine")) //
 						.intercept(FieldAccessor.ofField("engine")) //
 						.defineProperty("frameMaxTorque", long.class) //
 						.make().load(classLoader, ClassLoadingStrategy.Default.CHILD_FIRST_PERSISTENT).getLoaded();
