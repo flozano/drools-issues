@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
+import drools.issues.executor.RulesExecutor;
 import drools.issues.model.vehicles.GasolineModelGenerator;
 import drools.issues.model.vehicles.Vehicle;
 import drools.issues.model.vehicles.VehicleError;
@@ -36,11 +37,11 @@ public class DynamicClassTest extends AbstractTest {
 		PropertyUtils.setProperty(vehicle2, "engine.maxTorque", 350);
 		
 		try (var executor = executor(scenario, "DynamicClassTest.drl", generator.getClassLoader())) {
-			var result = executor.fire(vehicle1);
+			RulesExecutor.ExecutionResult result = executor.fire(vehicle1);
 			assertEquals(3, result.getNumberOfFiredRules());
 			assertEquals(2, result.getSingleOutput(Vehicle.class).getScore());
 			
-			var result2 = executor.fire(vehicle2);
+			RulesExecutor.ExecutionResult result2 = executor.fire(vehicle2);
 			assertEquals(1, result2.getNumberOfFiredRules());
 			assertEquals(0, result2.getSingleOutput(Vehicle.class).getScore());
 			assertNotNull(result2.getSingleOutput(VehicleError.class));
