@@ -2,6 +2,7 @@ package drools.issues.model.vehicles;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.FixedValue;
@@ -21,7 +22,8 @@ public class GasolineModelGenerator {
 					"drools.issues.model.vehicles.GasolineEngine");
 			this.classLoader = engineClass.getClassLoader();
 		} catch (ClassNotFoundException e) {
-			engineClass = new ByteBuddy().subclass(Engine.class).name("drools.issues.model.vehicles.GasolineEngine") //
+			engineClass = new ByteBuddy()
+					.subclass(Engine.class).name("drools.issues.model.vehicles.GasolineEngine") //
 					.method(ElementMatchers.named("isZeroEmissions")) //
 					.intercept(FixedValue.value(false)) //
 					.defineProperty("highOctane", boolean.class) //
@@ -37,8 +39,10 @@ public class GasolineModelGenerator {
 			this.classLoader = vehicleClass.getClassLoader();
 		} catch (ClassNotFoundException e) {
 			try {
-				vehicleClass = new ByteBuddy() //
-						.subclass(Vehicle.class) //
+				TypeDescription.Generic generic = TypeDescription.Generic.Builder.parameterizedType(Vehicle.class, engineClass).build();
+				vehicleClass = (Class<? extends Vehicle>) new ByteBuddy() //
+						// .subclass(Vehicle.class) //
+						.subclass(generic)
 						.name("drools.issues.model.vehicles.GasolineVehicle") //
 						.defineField("engine", engineClass, Visibility.PRIVATE) //
 						.defineConstructor(Visibility.PUBLIC) //
