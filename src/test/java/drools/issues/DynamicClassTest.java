@@ -4,14 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.poi.hpsf.Property;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import drools.issues.executor.RulesExecutor;
 import drools.issues.model.vehicles.GasolineModelGenerator;
 import drools.issues.model.vehicles.Vehicle;
